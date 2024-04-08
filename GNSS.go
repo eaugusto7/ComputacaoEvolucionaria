@@ -14,13 +14,11 @@ type Individual struct {
 
 // Função de custo para o membro 1
 func fitnessMember1(x, y float64) float64 {
-	// Implemente sua função de custo aqui
 	return 0
 }
 
 // Função de custo para o membro 2
 func fitnessMember2(x, y float64) float64 {
-	// Implemente sua função de custo aqui
 	return 0
 }
 
@@ -47,31 +45,26 @@ func evaluatePopulation(population []Individual) {
 
 // Função para decodificar o cromossomo em valores reais
 func decodeChromosome(chromosome []int) (float64, float64) {
-	// Implemente a lógica de decodificação aqui
 	return 0, 0
 }
 
 // Função para seleção de pais por roleta viciada
 func rouletteSelection(population []Individual) []Individual {
-	// Implemente a seleção por roleta viciada aqui
 	return nil
 }
 
 // Função para seleção de pais por torneio
 func tournamentSelection(population []Individual) []Individual {
-	// Implemente a seleção por torneio aqui
 	return nil
 }
 
 // Função de cruzamento com um ponto de corte por variável
 func crossover(parent1, parent2 Individual) (Individual, Individual) {
-	// Implemente o cruzamento aqui
 	return Individual{}, Individual{}
 }
 
 // Função de mutação bit a bit
 func mutate(child Individual, mutationRate float64) Individual {
-	// Implemente a mutação aqui
 	return child
 }
 
@@ -105,10 +98,10 @@ func main() {
 	rand.Seed(42) // Para reprodutibilidade
 
 	populationSize := 100
-	chromosomeLength := 10 // Tamanho arbitrário do cromossomo
-	generations := 100
+	chromosomeLength := 10
+	generations := 30
 	crossoverRate := 0.8
-	mutationRate := 0.01
+	mutationRate := 0.1
 	selectionMethod := "roulette" // Pode ser "roulette" ou "tournament"
 
 	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod)
