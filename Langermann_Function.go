@@ -42,6 +42,8 @@ func initializePopulation(populationSize, chromosomeLength int) []Individual {
 		}
 		population[i] = Individual{Chromosome: chromosome}
 	}
+	//fmt.Printf("\nPopulation: %v\n", population)
+
 	return population
 }
 
@@ -75,7 +77,11 @@ func rouletteSelection(population []Individual) []Individual {
 	fitnessSum := 0.0
 	for _, individual := range population {
 		fitnessSum += individual.Fitness
+		fmt.Printf("Fitness by Individual: %v\n", individual.Fitness)
 	}
+	fmt.Printf("FitnessSum: %v\n", fitnessSum)
+	fmt.Printf("\n")
+
 	for i := range parents {
 		r := rand.Float64() * fitnessSum
 		var sum float64
@@ -91,8 +97,34 @@ func rouletteSelection(population []Individual) []Individual {
 }
 
 // Função para seleção de pais por torneio
-func tournamentSelection(population []Individual) []Individual {
-	return nil
+func tournamentSelection(population []Individual, tournamentSize int) []Individual {
+	parents := make([]Individual, len(population))
+
+	for i := 0; i < len(population); i += 2 {
+		var competitors []Individual
+		for j := 0; j < tournamentSize; j++ {
+			competitorIndex := rand.Intn(len(population))
+
+			fmt.Println(competitorIndex)
+
+			competitors = append(competitors, population[competitorIndex])
+		}
+
+		var winner Individual
+		for _, competitor := range competitors {
+			if winner.Fitness == 0 || competitor.Fitness < winner.Fitness {
+				winner = competitor
+			}
+		}
+
+		parents[i] = winner
+		if i+1 < len(population) {
+			parents[i+1] = winner
+		}
+	}
+	fmt.Println(parents)
+
+	return parents
 }
 
 // Função de cruzamento com um ponto de corte por variável
@@ -141,7 +173,7 @@ func geneticAlgorithm(populationSize, chromosomeLength, generations int, crossov
 		if selectionMethod == "roulette" {
 			parents = rouletteSelection(population)
 		} else if selectionMethod == "tournament" {
-			parents = tournamentSelection(population)
+			parents = tournamentSelection(population, populationSize)
 		}
 		newPopulation := make([]Individual, populationSize)
 		for i := 0; i < len(parents); i += 2 {
@@ -156,14 +188,14 @@ func geneticAlgorithm(populationSize, chromosomeLength, generations int, crossov
 }
 
 func main() {
-	rand.Seed(42) // Para reprodutibilidade
+	//rand.Seed(42) // Para reprodutibilidade
 
-	populationSize := 100
+	populationSize := 200
 	chromosomeLength := 10
-	generations := 300
+	generations := 30
 	crossoverRate := 0.8
 	mutationRate := 0.1
-	selectionMethod := "roulette" // Pode ser "roulette" ou "tournament"
+	selectionMethod := "tournament" // Pode ser "roulette" ou "tournament"
 
 	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod)
 	fmt.Println("\nMelhor indivíduo:", bestIndividual)
