@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand"
 	"sort"
+	"time"
 )
 
 // Define a estrutura para um indivíduo na população
@@ -15,7 +16,7 @@ type Individual struct {
 
 // Função de Langermann
 func langermann(xx []float64) float64 {
-	/*d := len(xx)
+	d := len(xx)
 	m := 5
 	c := []float64{1, 2, 5, 2, 3}
 	A := [][]float64{{3, 5}, {5, 2}, {2, 1}, {1, 4}, {7, 9}}
@@ -29,11 +30,7 @@ func langermann(xx []float64) float64 {
 		newTerm := c[i] * math.Exp(-inner/math.Pi) * math.Cos(math.Pi*inner)
 		outer += newTerm
 	}
-	fmt.Println(xx)
-
-	return outer + 3*/
-	outer := math.Pow(xx[0], 2) + math.Pow(xx[1], 2) + 10
-	return outer
+	return outer + 100
 }
 
 // Função para inicializar a população
@@ -67,8 +64,8 @@ func decodeChromosome(chromosome []int) (float64, float64) {
 		x += float64(gene) * math.Pow(2, float64(i))
 		y += float64(gene) * math.Pow(2, float64(len(chromosome)-i-1))
 	}
-	limitSup := 65.0
-	limitInf := -65.0
+	limitSup := 10.0
+	limitInf := 0.0
 
 	precisao := (limitSup - limitInf) / (math.Pow(2, float64(len(chromosome))) - 1)
 
@@ -82,13 +79,13 @@ func decodeChromosome(chromosome []int) (float64, float64) {
 func rouletteSelection(population []Individual) []Individual {
 	parents := make([]Individual, len(population))
 	fitnessSum := 0.0
+
+	// Calcular a soma total de fitness
 	for _, individual := range population {
 		fitnessSum += individual.Fitness
-		//fmt.Printf("Fitness by Individual: %v\n", individual.Fitness)
 	}
-	//fmt.Printf("FitnessSum: %v\n", fitnessSum)
-	//fmt.Printf("\n")
 
+	// Selecionar pais com base na roleta viciada
 	for i := range parents {
 		r := rand.Float64() * fitnessSum
 		var sum float64
@@ -100,15 +97,15 @@ func rouletteSelection(population []Individual) []Individual {
 			}
 		}
 	}
+	fmt.Print("Sum of Fitness: ")
+	fmt.Println(fitnessSum)
+
 	return parents
 }
 
 // Função para seleção de pais por torneio
 func tournamentSelection(population []Individual, tournamentSize int) []Individual {
 	parents := make([]Individual, len(population))
-
-	//fmt.Println("Inicio torneio: ")
-
 	var competitors_list1 []Individual
 	var competitors_list2 []Individual
 
@@ -128,19 +125,11 @@ func tournamentSelection(population []Individual, tournamentSize int) []Individu
 		if competitors_list1[j].Fitness <= competitors_list2[j].Fitness {
 			parents[j] = competitors_list1[j]
 			SumOfFitness += competitors_list1[j].Fitness
-			//fmt.Print("Melhor indivíduo do torneio: ")
-			//fmt.Println(competitors_list1[j].Fitness)
 		} else {
 			parents[j] = competitors_list2[j]
 			SumOfFitness += competitors_list2[j].Fitness
-			//fmt.Print("Melhor indivíduo do torneio: ")
-			//fmt.Println(competitors_list2[j].Fitness)
 		}
 	}
-
-	//fmt.Print("Sum of Fitness: ")
-	//fmt.Println(SumOfFitness)
-
 	return parents
 }
 
@@ -149,14 +138,25 @@ func crossover(parent1, parent2 Individual, crossoverRate float64) (Individual, 
 	child1 := Individual{Chromosome: make([]int, len(parent1.Chromosome))}
 	child2 := Individual{Chromosome: make([]int, len(parent1.Chromosome))}
 	crossoverPoint := rand.Intn(len(parent1.Chromosome))
+	crossoverPoint2 := rand.Intn(len(parent1.Chromosome))
 
 	if rand.Float64() < crossoverRate {
-		for i := 0; i < crossoverPoint; i++ {
+		for i := 0; i < crossoverPoint/2; i++ {
 			child1.Chromosome[i] = parent1.Chromosome[i]
 			child2.Chromosome[i] = parent2.Chromosome[i]
 		}
 
 		for i := crossoverPoint; i < len(parent1.Chromosome); i++ {
+			child1.Chromosome[i] = parent2.Chromosome[i]
+			child2.Chromosome[i] = parent1.Chromosome[i]
+		}
+
+		for i := crossoverPoint / 2; i < crossoverPoint2; i++ {
+			child1.Chromosome[i] = parent1.Chromosome[i]
+			child2.Chromosome[i] = parent2.Chromosome[i]
+		}
+
+		for i := crossoverPoint2; i < len(parent1.Chromosome); i++ {
 			child1.Chromosome[i] = parent2.Chromosome[i]
 			child2.Chromosome[i] = parent1.Chromosome[i]
 		}
@@ -204,8 +204,8 @@ func geneticAlgorithm(populationSize, chromosomeLength, generations int, crossov
 			child2 = mutate(child2, mutationRate)
 			newPopulation[i], newPopulation[i+1] = child1, child2
 		}
-		fmt.Print("Melhor individuo por geracao: ")
-		fmt.Println(population[0].Fitness)
+		//fmt.Print("Melhor individuo por geracao: ")
+		//fmt.Println(population[0].Fitness)
 
 		if (generation + 1) != generations {
 			population = newPopulation
@@ -215,13 +215,13 @@ func geneticAlgorithm(populationSize, chromosomeLength, generations int, crossov
 }
 
 func main() {
-	//rand.Seed(42) // Para reprodutibilidade
+	rand.Seed(time.Now().UnixNano())
 
 	populationSize := 80
-	chromosomeLength := 30
-	generations := 300
+	chromosomeLength := 600
+	generations := 150
 	crossoverRate := 0.8
-	mutationRate := 0.02
+	mutationRate := 0.071
 	selectionMethod := "tournament" // Pode ser "roulette" ou "tournament"
 
 	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod)
