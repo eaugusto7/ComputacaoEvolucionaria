@@ -75,8 +75,8 @@ func initializePopulation(populationSize, chromosomeLength int) []Individual {
 func evaluatePopulation(population []Individual, dimensionAdjustment float64) {
 	for i := range population {
 		x, y := decodeChromosome(population[i].Chromosome)
-		population[i].Fitness = langermann([]float64{x, y}, dimensionAdjustment)
-		//population[i].Fitness = dejong5([]float64{x, y}, dimensionAdjustment)
+		//population[i].Fitness = langermann([]float64{x, y}, dimensionAdjustment)
+		population[i].Fitness = dejong5([]float64{x, y}, dimensionAdjustment)
 	}
 }
 
@@ -88,11 +88,11 @@ func decodeChromosome(chromosome []int) (float64, float64) {
 		x += float64(gene) * math.Pow(2, float64(i))
 		y += float64(gene) * math.Pow(2, float64(len(chromosome)-i-1))
 	}
-	limitSup := 10.0
-	limitInf := 0.0
+	//limitSup := 10.0
+	//limitInf := 0.0
 
-	//limitSup := 65.536
-	//limitInf := -65.536
+	limitSup := 65.536
+	limitInf := -65.536
 
 	precisao := (limitSup - limitInf) / (math.Pow(2, float64(len(chromosome))) - 1)
 
@@ -252,8 +252,8 @@ func main() {
 
 	populationSize := 80
 	chromosomeLength := 600
-	generations := 150
-	crossoverRate := 0.9
+	generations := 200
+	crossoverRate := 0.8
 	mutationRate := 0.07
 	selectionMethod := "tournament" // Pode ser "roulette" ou "tournament"
 	elitism := true                 // Define se o elitismo será aplicado
