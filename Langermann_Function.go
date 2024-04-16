@@ -253,10 +253,10 @@ func main() {
 	populationSize := 80
 	chromosomeLength := 600
 	generations := 150
-	crossoverRate := 0.8
+	crossoverRate := 0.9
 	mutationRate := 0.07
 	selectionMethod := "tournament" // Pode ser "roulette" ou "tournament"
-	elitism := false                // Define se o elitismo será aplicado
+	elitism := true                 // Define se o elitismo será aplicado
 	dimensionAdjustment := 100.0
 
 	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod, elitism, dimensionAdjustment)
