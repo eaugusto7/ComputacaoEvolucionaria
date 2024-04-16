@@ -33,6 +33,31 @@ func langermann(xx []float64, dimensionAdjustment float64) float64 {
 	return outer + dimensionAdjustment
 }
 
+func dejong5(xx []float64, dimensionAdjustment float64) float64 {
+	outer := 0.0
+
+	a1 := []float64{-32.0, -16.0, 0.0, 16.0, 32.0,
+		-32.0, -16.0, 0.0, 16.0, 32.0,
+		-32.0, -16.0, 0.0, 16.0, 32.0,
+		-32.0, -16.0, 0.0, 16.0, 32.0,
+		-32.0, -16.0, 0.0, 16.0, 32.0}
+
+	a2 := []float64{-32.0, -32.0, -32.0, -32.0, -32.0,
+		-16.0, -16.0, -16.0, -16.0, -16.0,
+		0.0, 0.0, 0.0, 0.0, 0.0,
+		16.0, 16.0, 16.0, 16.0, 16.0,
+		32.0, 32.0, 32.0, 32.0, 32.0}
+
+	sum := 0.002
+	for i := 1; i < 26; i++ {
+		sum += (1 / (float64(i) + math.Pow((xx[0]-a1[i-1]), 6) + math.Pow((xx[1]-a2[i-1]), 6)))
+	}
+
+	outer = 1.0 / sum
+
+	return outer + dimensionAdjustment
+}
+
 // Função para inicializar a população
 func initializePopulation(populationSize, chromosomeLength int) []Individual {
 	population := make([]Individual, populationSize)
@@ -51,6 +76,7 @@ func evaluatePopulation(population []Individual, dimensionAdjustment float64) {
 	for i := range population {
 		x, y := decodeChromosome(population[i].Chromosome)
 		population[i].Fitness = langermann([]float64{x, y}, dimensionAdjustment)
+		//population[i].Fitness = dejong5([]float64{x, y}, dimensionAdjustment)
 	}
 }
 
@@ -64,6 +90,9 @@ func decodeChromosome(chromosome []int) (float64, float64) {
 	}
 	limitSup := 10.0
 	limitInf := 0.0
+
+	//limitSup := 65.536
+	//limitInf := -65.536
 
 	precisao := (limitSup - limitInf) / (math.Pow(2, float64(len(chromosome))) - 1)
 
@@ -80,7 +109,7 @@ func rouletteSelection(population []Individual) []Individual {
 
 	// Calcular a soma total de fitness
 	for _, individual := range population {
-		fitnessSum += individual.Fitness
+		fitnessSum += 1 / individual.Fitness
 	}
 
 	// Selecionar pais com base na roleta viciada
@@ -88,7 +117,7 @@ func rouletteSelection(population []Individual) []Individual {
 		r := rand.Float64() * fitnessSum
 		var sum float64
 		for _, individual := range population {
-			sum += individual.Fitness
+			sum += 1 / individual.Fitness
 			if sum >= r {
 				parents[i] = individual
 				break
@@ -223,8 +252,8 @@ func main() {
 
 	populationSize := 80
 	chromosomeLength := 600
-	generations := 150
-	crossoverRate := 0.9
+	generations := 200
+	crossoverRate := 0.8
 	mutationRate := 0.07
 	selectionMethod := "roulette" // Pode ser "roulette" ou "tournament"
 	elitism := false              // Define se o elitismo será aplicado
@@ -234,9 +263,7 @@ func main() {
 	//fmt.Println("\nMelhor indivíduo:", bestIndividual)
 	fmt.Println(bestIndividual.Fitness - dimensionAdjustment)
 
-	data := make([]float64, 10)
-	for i := range data {
-		data[i] = rand.NormFloat64()
-	}
+	//vector := []float64{1.0, 2.0}
+	//fmt.Print(dejong5(vector))
 
 }
