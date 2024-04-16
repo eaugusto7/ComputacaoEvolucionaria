@@ -237,8 +237,15 @@ func geneticAlgorithm(populationSize, chromosomeLength, generations int, crossov
 			child2 = mutate(child2, mutationRate)
 			newPopulation[i], newPopulation[i+1] = child1, child2
 		}
-		//fmt.Print("Melhor individuo por geracao: ")
-		//fmt.Println(population[0].Fitness)
+		fmt.Println(population[0].Fitness - dimensionAdjustment)
+
+		totalFitness := 0.0
+		for _, individual := range population {
+			totalFitness += (individual.Fitness - dimensionAdjustment)
+			//fmt.Println(individual.Fitness - dimensionAdjustment)
+		}
+		fitnessMedio := totalFitness / float64(len(population))
+		fmt.Println(fitnessMedio)
 
 		if (generation + 1) != generations {
 			population = newPopulation
@@ -253,14 +260,15 @@ func main() {
 	populationSize := 80
 	chromosomeLength := 600
 	generations := 150
-	crossoverRate := 0.8
-	mutationRate := 0.07
+	crossoverRate := 0.9
+	mutationRate := 0.03
 	selectionMethod := "roulette" // Pode ser "roulette" ou "tournament"
 	elitism := true               // Define se o elitismo será aplicado
 	dimensionAdjustment := 100.0
 
 	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod, elitism, dimensionAdjustment)
 	//fmt.Println("\nMelhor indivíduo:", bestIndividual)
+	fmt.Println("Fitness Individuo Final")
 	fmt.Println(bestIndividual.Fitness - dimensionAdjustment)
 
 	//vector := []float64{1.0, 2.0}
