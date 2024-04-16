@@ -224,13 +224,19 @@ func main() {
 	populationSize := 80
 	chromosomeLength := 600
 	generations := 150
-	crossoverRate := 0.8
-	mutationRate := 0.05
+	crossoverRate := 0.9
+	mutationRate := 0.07
 	selectionMethod := "roulette" // Pode ser "roulette" ou "tournament"
 	elitism := false              // Define se o elitismo será aplicado
 	dimensionAdjustment := 100.0
 
 	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod, elitism, dimensionAdjustment)
 	//fmt.Println("\nMelhor indivíduo:", bestIndividual)
-	fmt.Println("\nFitness melhor indivíduo:", bestIndividual.Fitness-dimensionAdjustment)
+	fmt.Println(bestIndividual.Fitness - dimensionAdjustment)
+
+	data := make([]float64, 10)
+	for i := range data {
+		data[i] = rand.NormFloat64()
+	}
+
 }
