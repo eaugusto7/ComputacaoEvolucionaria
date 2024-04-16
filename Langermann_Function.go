@@ -15,7 +15,7 @@ type Individual struct {
 }
 
 // Função de Langermann
-func langermann(xx []float64) float64 {
+func langermann(xx []float64, dimensionAdjustment float64) float64 {
 	d := len(xx)
 	m := 5
 	c := []float64{1, 2, 5, 2, 3}
@@ -30,7 +30,7 @@ func langermann(xx []float64) float64 {
 		newTerm := c[i] * math.Exp(-inner/math.Pi) * math.Cos(math.Pi*inner)
 		outer += newTerm
 	}
-	return outer + 100
+	return outer + dimensionAdjustment
 }
 
 // Função para inicializar a população
@@ -43,16 +43,14 @@ func initializePopulation(populationSize, chromosomeLength int) []Individual {
 		}
 		population[i] = Individual{Chromosome: chromosome}
 	}
-	//fmt.Printf("\nPopulation: %v\n", population)
-
 	return population
 }
 
 // Função para avaliar a população
-func evaluatePopulation(population []Individual) {
+func evaluatePopulation(population []Individual, dimensionAdjustment float64) {
 	for i := range population {
 		x, y := decodeChromosome(population[i].Chromosome)
-		population[i].Fitness = langermann([]float64{x, y})
+		population[i].Fitness = langermann([]float64{x, y}, dimensionAdjustment)
 	}
 }
 
@@ -97,8 +95,6 @@ func rouletteSelection(population []Individual) []Individual {
 			}
 		}
 	}
-	fmt.Print("Sum of Fitness: ")
-	fmt.Println(fitnessSum)
 
 	return parents
 }
@@ -119,15 +115,11 @@ func tournamentSelection(population []Individual, tournamentSize int) []Individu
 		competitors_list2 = append(competitors_list2, population[competitorIndex])
 	}
 
-	var SumOfFitness float64 = 0
-
-	for j := 0; j < len(competitors_list1); j += 1 {
+	for j := 0; j < len(competitors_list1); j++ {
 		if competitors_list1[j].Fitness <= competitors_list2[j].Fitness {
 			parents[j] = competitors_list1[j]
-			SumOfFitness += competitors_list1[j].Fitness
 		} else {
 			parents[j] = competitors_list2[j]
-			SumOfFitness += competitors_list2[j].Fitness
 		}
 	}
 	return parents
@@ -183,22 +175,34 @@ func mutate(child Individual, mutationRate float64) Individual {
 }
 
 // Algoritmo genético principal
-func geneticAlgorithm(populationSize, chromosomeLength, generations int, crossoverRate, mutationRate float64, selectionMethod string) Individual {
+func geneticAlgorithm(populationSize, chromosomeLength, generations int, crossoverRate, mutationRate float64, selectionMethod string, elitism bool, dimensionAdjustment float64) Individual {
 	population := initializePopulation(populationSize, chromosomeLength)
+	//bestPrevious := Individual{}
 
 	for generation := 0; generation < generations; generation++ {
-		evaluatePopulation(population)
+		evaluatePopulation(population, dimensionAdjustment)
 		sort.Slice(population, func(i, j int) bool {
 			return population[i].Fitness < population[j].Fitness
 		})
+
 		parents := make([]Individual, populationSize)
 		if selectionMethod == "roulette" {
 			parents = rouletteSelection(population)
 		} else if selectionMethod == "tournament" {
 			parents = tournamentSelection(population, populationSize)
 		}
+
 		newPopulation := make([]Individual, populationSize)
+
+		if elitism {
+			newPopulation[0] = population[0]
+			newPopulation[1] = population[1]
+		}
+
 		for i := 0; i < len(parents); i += 2 {
+			if elitism && i == 0 {
+				continue
+			}
 			child1, child2 := crossover(parents[i], parents[i+1], crossoverRate)
 			child1 = mutate(child1, mutationRate)
 			child2 = mutate(child2, mutationRate)
@@ -221,10 +225,12 @@ func main() {
 	chromosomeLength := 600
 	generations := 150
 	crossoverRate := 0.8
-	mutationRate := 0.071
-	selectionMethod := "tournament" // Pode ser "roulette" ou "tournament"
+	mutationRate := 0.05
+	selectionMethod := "roulette" // Pode ser "roulette" ou "tournament"
+	elitism := false              // Define se o elitismo será aplicado
+	dimensionAdjustment := 100.0
 
-	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod)
-	fmt.Println("\nMelhor indivíduo:", bestIndividual)
-	fmt.Println("\nFitness melhor indivíduo:", bestIndividual.Fitness)
+	bestIndividual := geneticAlgorithm(populationSize, chromosomeLength, generations, crossoverRate, mutationRate, selectionMethod, elitism, dimensionAdjustment)
+	//fmt.Println("\nMelhor indivíduo:", bestIndividual)
+	fmt.Println("\nFitness melhor indivíduo:", bestIndividual.Fitness-dimensionAdjustment)
 }
