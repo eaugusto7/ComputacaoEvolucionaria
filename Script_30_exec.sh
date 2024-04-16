@@ -5,6 +5,6 @@ output_file="Nome_Arquivo.csv"
 
 for i in {1..30}; do
     # Executa o programa e redireciona a saída para o arquivo de saída
-    go run Langermann_Function.go >> "$output_file" 2>&1
+    go run GeneticAlgorithm.go >> "$output_file" 2>&1
     echo "Execução $i concluída"
 done
