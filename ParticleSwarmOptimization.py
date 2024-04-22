@@ -42,23 +42,23 @@ def dejong5(xx):
     return outer
 
 # Filter Settings
-num_particles = 50
+num_particles = 150
 num_dimensions = 2
-max_iterations = 10
-w = 0.2
-c1 = 1.5
-c2 = 1.5
+max_iterations = 300
+w = 0.1
+c1 = 0.5
+c2 = 0.5
 tolerance = 1e-4
 
 # Using Langermann Function
-particles = [[random.uniform(0, 10) 
-              for _ in range(num_dimensions)] 
-              for _ in range(num_particles)]
-
-# Using DeJong N5 Function
-#particles = [[random.uniform(-65536, 65536) 
+#particles = [[random.uniform(0, 10) 
 #              for _ in range(num_dimensions)] 
 #              for _ in range(num_particles)]
+
+# Using DeJong N5 Function
+particles = [[random.uniform(-65536, 65536) 
+              for _ in range(num_dimensions)] 
+              for _ in range(num_particles)]
 
 velocities = [[0 
                for _ in range(num_dimensions)] 
@@ -71,14 +71,14 @@ for iteration in range(max_iterations):
     for i in range(num_particles):
         particle = particles[i]
         velocity = velocities[i]
-        fitness_current = langermann(particle)
+        fitness_current = dejong5(particle)
 
         # Update Local Best
-        if fitness_current < langermann(best_local_positions[i]):
+        if fitness_current < dejong5(best_local_positions[i]):
             best_local_positions[i] = particle[:]
 
         # Update Global Best
-        if fitness_current < langermann(best_global_position):
+        if fitness_current < dejong5(best_global_position):
             best_global_position = particle[:]
 
         for j in range(num_dimensions):
@@ -89,5 +89,6 @@ for iteration in range(max_iterations):
         for j in range(num_dimensions):
             particles[i][j] += velocities[i][j]
 
-print("Best Position:", best_global_position)
-print("Value of Best Position:", langermann(best_global_position))
+#print("Best Position:", best_global_position)
+#print("Value of Best Position:", langermann(best_global_position))
+print(dejong5(best_global_position))
