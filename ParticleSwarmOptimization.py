@@ -1,5 +1,6 @@
 import random
 import math
+import time
 
 # Function Langermann
 def langermann(xx):
@@ -38,17 +39,18 @@ def dejong5(xx):
         sum_val += 1 / (i + math.pow((xx[0] - a1[i - 1]), 6) + math.pow((xx[1] - a2[i - 1]), 6))
 
     outer = 1.0 / sum_val
-
     return outer
 
 # Filter Settings
-num_particles = 150
+num_particles = 100
 num_dimensions = 2
-max_iterations = 300
-w = 0.1
-c1 = 0.5
-c2 = 0.5
+max_iterations = 10000
+w = 0.7
+c1 = 2.05
+c2 = 2.05
 tolerance = 1e-4
+
+random.seed(int(time.time() * 1e9))
 
 # Using Langermann Function
 #particles = [[random.uniform(0, 10) 
@@ -56,7 +58,7 @@ tolerance = 1e-4
 #              for _ in range(num_particles)]
 
 # Using DeJong N5 Function
-particles = [[random.uniform(-65536, 65536) 
+particles = [[random.uniform(-65536.0, 65536.0) 
               for _ in range(num_dimensions)] 
               for _ in range(num_particles)]
 
@@ -82,7 +84,10 @@ for iteration in range(max_iterations):
             best_global_position = particle[:]
 
         for j in range(num_dimensions):
+            random.seed(int(time.time() * 1e9))
             r1 = random.random()
+
+            random.seed(int(time.time() * 1e9))
             r2 = random.random()
             velocities[i][j] = w * velocity[j] + c1 * r1 * (best_local_positions[i][j] - particle[j]) + c2 * r2 * (best_global_position[j] - particle[j])
 

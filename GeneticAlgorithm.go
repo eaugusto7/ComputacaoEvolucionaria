@@ -30,6 +30,8 @@ func langermann(xx []float64, dimensionAdjustment float64) float64 {
 		newTerm := c[i] * math.Exp(-inner/math.Pi) * math.Cos(math.Pi*inner)
 		outer += newTerm
 	}
+	fmt.Println(xx)
+	fmt.Println(outer)
 	return outer + dimensionAdjustment
 }
 
@@ -75,8 +77,8 @@ func initializePopulation(populationSize, chromosomeLength int) []Individual {
 func evaluatePopulation(population []Individual, dimensionAdjustment float64) {
 	for i := range population {
 		x, y := decodeChromosome(population[i].Chromosome)
-		//population[i].Fitness = langermann([]float64{x, y}, dimensionAdjustment)
-		population[i].Fitness = dejong5([]float64{x, y}, dimensionAdjustment)
+		population[i].Fitness = langermann([]float64{x, y}, dimensionAdjustment)
+		//population[i].Fitness = dejong5([]float64{x, y}, dimensionAdjustment)
 	}
 }
 
@@ -88,11 +90,11 @@ func decodeChromosome(chromosome []int) (float64, float64) {
 		x += float64(gene) * math.Pow(2, float64(i))
 		y += float64(gene) * math.Pow(2, float64(len(chromosome)-i-1))
 	}
-	//limitSup := 10.0
-	//limitInf := 0.0
+	limitSup := 10.0
+	limitInf := 0.0
 
-	limitSup := 65.536
-	limitInf := -65.536
+	//limitSup := 65.536
+	//limitInf := -65.536
 
 	precisao := (limitSup - limitInf) / (math.Pow(2, float64(len(chromosome))) - 1)
 
