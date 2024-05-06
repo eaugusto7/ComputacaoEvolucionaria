@@ -94,10 +94,10 @@ def onlookerBees(population, bottom_limit, higher_limit):
             population[i].fitness = new_fitness
     return population
 
-def random_SearchBees(population, bottom_limit, higher_limit, factor_random_search):
+def scoutBees(population, bottom_limit, higher_limit, factor_random_search):
     for bee in population:
         if random.uniform(0, 1) < factor_random_search:
-            bee.position = np.random.uniform(low=bottom_limit, high=higher_limit, size=len(bee.position))  # Dentro dos limites
+            bee.position = np.random.uniform(low=bottom_limit, high=higher_limit, size=len(bee.position))
             bee.fitness = evaluate_fitness(bee.position)
     return population
 
@@ -109,7 +109,7 @@ def ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, fact
     for generation in range(generations):
         population = employedBees(population, bottom_limit, higher_limit)
         population = onlookerBees(population, bottom_limit, higher_limit)
-        population = random_SearchBees(population, bottom_limit, higher_limit, factor_random_search)
+        population = scoutBees(population, bottom_limit, higher_limit, factor_random_search)
 
         best_solution = min(population, key=lambda bee: bee.fitness)
         print(f"Generation {generation}: Best Fitness = {best_solution.fitness}")
