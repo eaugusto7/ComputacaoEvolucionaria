@@ -7,6 +7,61 @@ class Bee:
         self.position = position
         self.fitness = evaluate_fitness(position)
 
+def ackley(xx, a=20, b=0.2, c=2*np.pi):
+    d = len(xx)
+
+    sum1 = np.sum(np.fromiter((xi**2 for xi in xx), dtype=float))
+    sum2 = np.sum(np.fromiter((np.cos(c * xi) for xi in xx), dtype=float))
+
+    term1 = -a * np.exp(-b * np.sqrt(sum1 / d))
+    term2 = -np.exp(sum2 / d)
+
+    y = term1 + term2 + a + np.exp(1)
+
+    return y
+    
+def bukin6(xx):
+    x1, x2 = xx
+
+    term1 = 100 * np.sqrt(np.abs(x2 - 0.01 * x1**2))
+    term2 = 0.01 * np.abs(x1 + 10)
+
+    y = term1 + term2
+
+    return y
+
+def crossit(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    fact1 = np.sin(x1) * np.sin(x2)
+    fact2 = np.exp(abs(100 - np.sqrt(x1**2 + x2**2)) / np.pi)
+
+    y = -0.0001 * (abs(fact1 * fact2) + 1) ** 0.1
+
+    return y
+
+def drop(xx):
+    x1, x2 = xx
+    
+    frac1 = 1 + np.cos(12 * np.sqrt(x1**2 + x2**2))
+    frac2 = 0.5 * (x1**2 + x2**2) + 2
+
+    y = -frac1 / frac2
+    
+    return y
+
+
+def egg(xx):
+    x1, x2 = xx
+    
+    term1 = -(x2 + 47) * np.sin(np.sqrt(np.abs(x2 + x1 / 2 + 47)))
+    term2 = -x1 * np.sin(np.sqrt(np.abs(x1 - (x2 + 47))))
+
+    y = term1 + term2
+    
+    return y
+
 def langermann(xx):
     m = 5
     c = [1, 2, 5, 2, 3]
@@ -62,10 +117,15 @@ def levy(xx):
     return y
 
 def evaluate_fitness(position):
+    #return ackley(position)
+    #return bukin6(position) #Revisar essa funcao
+    #return crossit(position)
+    #return drop(position)
+    return egg(position)
     #return langermann(position)
     #return deJong5(position)
     #return schwef(position)
-    return levy(position)
+    #return levy(position)
 
 def employedBees(population, bottom_limit, higher_limit):
     for bee in population:
@@ -112,7 +172,7 @@ def ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, fact
         population = scoutBees(population, bottom_limit, higher_limit, factor_random_search)
 
         best_solution = min(population, key=lambda bee: bee.fitness)
-        #print(f"Generation {generation}: Best Fitness = {best_solution.fitness}")
+        print(f"Generation {generation}: Best Fitness = {best_solution.fitness}")
 
     return best_solution
 
@@ -120,6 +180,27 @@ problem_size = 2
 colony_size = 150
 generations = 80
 factor_random_search = 0.01
+
+#Limit of Ackley
+#bottom_limit = -32.768
+#higher_limit = 32.768
+
+#Revisar essa funcao
+#Limit of Bukin6
+#bottom_limit = -15.0
+#higher_limit = -5.0
+
+#Limit of Crossfit
+#bottom_limit = -10.0
+#higher_limit = 10.0
+
+#Limit of Drop
+#bottom_limit = -5.12
+#higher_limit = 5.12
+
+#Limit of Egg
+bottom_limit = -512.0
+higher_limit = 512.0
 
 #Limit of Langermann
 #bottom_limit = 0
@@ -130,43 +211,43 @@ factor_random_search = 0.01
 #higher_limit = 65.536
 
 #Limit of Schwefel 
-bottom_limit = -500
-higher_limit = 500
+#bottom_limit = -500
+#higher_limit = 500
 
 #Limit of Levy Function
 #bottom_limit = -10
 #higher_limit = 10
 
-#best_solution = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search)
+best_solution = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search)
 
 #print("Best Bee Solution:")
 #print("Position:", best_solution.position)
 #print("Fitness:", best_solution.fitness)
 
-#print(best_solution.fitness)
+print(best_solution.fitness)
 
 # Realizar 30 execuções e guardar os resultados
-results = []
-for _ in range(30):
-    result = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search).fitness
-    results.append(result)
+#results = []
+#for _ in range(30):
+#    result = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search).fitness
+#    results.append(result)
 
 # Calcular estatísticas
-mean_result = np.mean(results)
-median_result = np.median(results)
-max_result = np.max(results)
-min_result = np.min(results)
+#mean_result = np.mean(results)
+#median_result = np.median(results)
+#max_result = np.max(results)
+#min_result = np.min(results)
 
 # Plotar os resultados
-plt.figure(figsize=(8, 6))
-plt.hist(results, bins=10, edgecolor='black')
-plt.axvline(x=mean_result, color='r', linestyle='--', label=f'Mean: {mean_result:.2f}')
-plt.axvline(x=median_result, color='g', linestyle='--', label=f'Median: {median_result:.2f}')
-plt.axvline(x=max_result, color='b', linestyle='--', label=f'Max: {max_result:.2f}')
-plt.axvline(x=min_result, color='y', linestyle='--', label=f'Min: {min_result:.2f}')
-plt.xlabel('Fitness')
-plt.ylabel('Frequency')
-plt.title('Histogram of Fitness Values')
-plt.legend()
-plt.grid(True)
-plt.show()
+#plt.figure(figsize=(8, 6))
+#plt.hist(results, bins=10, edgecolor='black')
+#plt.axvline(x=mean_result, color='r', linestyle='--', label=f'Mean: {mean_result:.2f}')
+#plt.axvline(x=median_result, color='g', linestyle='--', label=f'Median: {median_result:.2f}')
+#plt.axvline(x=max_result, color='b', linestyle='--', label=f'Max: {max_result:.2f}')
+#plt.axvline(x=min_result, color='y', linestyle='--', label=f'Min: {min_result:.2f}')
+#plt.xlabel('Fitness')
+#plt.ylabel('Frequency')
+#plt.title('Histogram of Fitness Values')
+#plt.legend()
+#plt.grid(True)
+#plt.show()
