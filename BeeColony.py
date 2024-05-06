@@ -1,7 +1,7 @@
 import random
 import numpy as np
 import math
-
+import matplotlib.pyplot as plt
 class Bee:
     def __init__(self, position):
         self.position = position
@@ -63,9 +63,9 @@ def levy(xx):
 
 def evaluate_fitness(position):
     #return langermann(position)
-    return deJong5(position)
+    #return deJong5(position)
     #return schwef(position)
-    #return levy(position)
+    return levy(position)
 
 def employedBees(population, bottom_limit, higher_limit):
     for bee in population:
@@ -112,13 +112,13 @@ def ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, fact
         population = scoutBees(population, bottom_limit, higher_limit, factor_random_search)
 
         best_solution = min(population, key=lambda bee: bee.fitness)
-        print(f"Generation {generation}: Best Fitness = {best_solution.fitness}")
+        #print(f"Generation {generation}: Best Fitness = {best_solution.fitness}")
 
     return best_solution
 
 problem_size = 2
-colony_size = 100
-generations = 50
+colony_size = 150
+generations = 80
 factor_random_search = 0.01
 
 #Limit of Langermann
@@ -126,19 +126,47 @@ factor_random_search = 0.01
 #higher_limit = 10
 
 #Limit og DeJong N5
-bottom_limit = -65.536
-higher_limit = 65.536
+#bottom_limit = -65.536
+#higher_limit = 65.536
 
 #Limit of Schwefel 
-#bottom_limit = -500
-#higher_limit = 500
+bottom_limit = -500
+higher_limit = 500
 
 #Limit of Levy Function
 #bottom_limit = -10
 #higher_limit = 10
 
-best_solution = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search)
+#best_solution = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search)
 
-print("Best Bee Solution:")
-print("Position:", best_solution.position)
-print("Fitness:", best_solution.fitness)
+#print("Best Bee Solution:")
+#print("Position:", best_solution.position)
+#print("Fitness:", best_solution.fitness)
+
+#print(best_solution.fitness)
+
+# Realizar 30 execuções e guardar os resultados
+results = []
+for _ in range(30):
+    result = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search).fitness
+    results.append(result)
+
+# Calcular estatísticas
+mean_result = np.mean(results)
+median_result = np.median(results)
+max_result = np.max(results)
+min_result = np.min(results)
+
+# Plotar os resultados
+plt.figure(figsize=(8, 6))
+plt.hist(results, bins=10, edgecolor='black')
+plt.axvline(x=mean_result, color='r', linestyle='--', label=f'Mean: {mean_result:.2f}')
+plt.axvline(x=median_result, color='g', linestyle='--', label=f'Median: {median_result:.2f}')
+plt.axvline(x=max_result, color='b', linestyle='--', label=f'Max: {max_result:.2f}')
+plt.axvline(x=min_result, color='y', linestyle='--', label=f'Min: {min_result:.2f}')
+plt.xlabel('Fitness')
+plt.ylabel('Frequency')
+plt.title('Histogram of Fitness Values')
+plt.legend()
+plt.grid(True)
+plt.show()
