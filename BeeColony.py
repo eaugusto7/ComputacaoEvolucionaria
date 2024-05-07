@@ -101,26 +101,6 @@ def langermann(xx):
         outer += newTerm
     return outer
 
-def deJong5(xx):
-    a1 = [-32.0, -16.0, 0.0, 16.0, 32.0]*5
-    a2 = [-32.0]*5 + [-16.0]*5 + [0.0]*5 + [16.0]*5 + [32.0]*5
-    a = [a1, a2]
-
-    sum = 0.002
-    for i in range(1, 26):
-        sum += ( 1 / (i + (xx[0] - a[0][i-1])**6 + (xx[1] - a[1][i-1])**6) )
-    
-    return 1.0/sum
-
-def schwef(xx):
-    d = len(xx)
-    _sum = 0
-    for xi in xx:
-        _sum += xi * np.sin(np.sqrt(abs(xi)))
-    
-    y = 418.9829 * d - _sum
-    return y
-
 def levy(xx):
     d = len(xx)
     
@@ -151,6 +131,26 @@ def levy13(xx):
 
     y = term1 + term2 + term3
 
+    return y
+
+def deJong5(xx):
+    a1 = [-32.0, -16.0, 0.0, 16.0, 32.0]*5
+    a2 = [-32.0]*5 + [-16.0]*5 + [0.0]*5 + [16.0]*5 + [32.0]*5
+    a = [a1, a2]
+
+    sum = 0.002
+    for i in range(1, 26):
+        sum += ( 1 / (i + (xx[0] - a[0][i-1])**6 + (xx[1] - a[1][i-1])**6) )
+    
+    return 1.0/sum
+
+def schwef(xx):
+    d = len(xx)
+    _sum = 0
+    for xi in xx:
+        _sum += xi * np.sin(np.sqrt(abs(xi)))
+    
+    y = 418.9829 * d - _sum
     return y
 
 def rastrigin(xx):
@@ -292,20 +292,20 @@ def stybtang(xx):
 def evaluate_fitness(position):
     #return ackley(position)
     #return bukin6(position) #Revisar essa funcao
-    #return crossit(position)
+    #return crossit(position) #Revisar essa funcao
     #return drop(position)
     #return egg(position)
     #return griewank(position)
     #return holder(position)
     #return langermann(position)
-    #return deJong5(position)
-    #return schwef(position)
     #return levy(position)
     #return levy13(position)
     #return rastrigin(position)
     #return schaffer2(position)
     #return schaffer4(position)
+    #return schwef(position)
     #return shubert(position)
+    #return deJong5(position)
     #return easom(position)
     #return michal(position)
     #return beale(position)
@@ -402,14 +402,6 @@ factor_random_search = 0.01
 #bottom_limit = 0
 #higher_limit = 10
 
-#Limit og DeJong N5
-#bottom_limit = -65.536
-#higher_limit = 65.536
-
-#Limit of Schwefel 
-#bottom_limit = -500
-#higher_limit = 500
-
 #Limit of Levy
 #bottom_limit = -10
 #higher_limit = 10
@@ -422,9 +414,17 @@ factor_random_search = 0.01
 #bottom_limit = -100.0
 #higher_limit = 100.0
 
+#Limit of Schwefel 
+#bottom_limit = -500
+#higher_limit = 500
+
 #Limit of Shubert
 #bottom_limit = -10.0
 #higher_limit = 10.0
+
+#Limit og DeJong N5
+#bottom_limit = -65.536
+#higher_limit = 65.536
 
 #Limit of Easom
 #bottom_limit = -100.0
