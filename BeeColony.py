@@ -62,6 +62,31 @@ def egg(xx):
     
     return y
 
+def griewank(xx):
+    d = len(xx)
+    _sum = 0
+    _prod = 1
+
+    for ii in range(d):
+        xi = xx[ii]
+        _sum += xi ** 2 / 4000
+        _prod *= np.cos(xi / np.sqrt(ii + 1))
+
+    y = _sum - _prod + 1
+    
+    return y
+
+def holder(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    fact1 = np.sin(x1) * np.cos(x2)
+    fact2 = np.exp(abs(1 - np.sqrt(x1 ** 2 + x2 ** 2) / np.pi))
+
+    y = -abs(fact1 * fact2)
+
+    return y
+
 def langermann(xx):
     m = 5
     c = [1, 2, 5, 2, 3]
@@ -116,16 +141,179 @@ def levy(xx):
     
     return y
 
+def levy13(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    term1 = (np.sin(3 * np.pi * x1)) ** 2
+    term2 = (x1 - 1) ** 2 * (1 + (np.sin(3 * np.pi * x2)) ** 2)
+    term3 = (x2 - 1) ** 2 * (1 + (np.sin(2 * np.pi * x2)) ** 2)
+
+    y = term1 + term2 + term3
+
+    return y
+
+def rastrigin(xx):
+    d = len(xx)
+    _sum = 0
+    for xi in xx:
+        _sum += (xi ** 2 - 10 * np.cos(2 * np.pi * xi))
+    
+    y = 10 * d + _sum
+    return y
+
+def schaffer2(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    fact1 = (np.sin(x1**2 - x2**2))**2 - 0.5
+    fact2 = (1 + 0.001 * (x1**2 + x2**2))**2
+
+    y = 0.5 + fact1 / fact2
+
+    return y
+
+def schaffer4(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    fact1 = (np.cos(np.sin(abs(x1**2 - x2**2))))**2 - 0.5
+    fact2 = (1 + 0.001 * (x1**2 + x2**2))**2
+
+    y = 0.5 + fact1 / fact2
+
+    return y
+
+def shubert(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+    sum1 = 0
+    sum2 = 0
+
+    for ii in range(1, 6):
+        new1 = ii * np.cos((ii + 1) * x1 + ii)
+        new2 = ii * np.cos((ii + 1) * x2 + ii)
+        sum1 += new1
+        sum2 += new2
+
+    y = sum1 * sum2
+
+    return y
+
+def easom(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+    fact1 = -np.cos(x1) * np.cos(x2)
+    fact2 = np.exp(-(x1 - np.pi)**2 - (x2 - np.pi)**2)
+    y = fact1 * fact2
+    return y
+
+def michal(xx, m=10):
+    d = len(xx)
+    _sum = 0
+
+    for ii in range(d):
+        xi = xx[ii]
+        new = np.sin(xi) * (np.sin((ii + 1) * xi**2 / np.pi))**(2 * m)
+        _sum += new
+
+    y = -_sum
+    return y
+
+def beale(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    term1 = (1.5 - x1 + x1 * x2) ** 2
+    term2 = (2.25 - x1 + x1 * x2 ** 2) ** 2
+    term3 = (2.625 - x1 + x1 * x2 ** 3) ** 2
+
+    y = term1 + term2 + term3
+
+    return y
+
+def branin(xx, a=1, b=5.1/(4*np.pi**2), c=5/np.pi, r=6, s=10, t=1/(8*np.pi)):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    term1 = a * (x2 - b * x1 ** 2 + c * x1 - r) ** 2
+    term2 = s * (1 - t) * np.cos(x1)
+
+    y = term1 + term2 + s
+
+    return y
+
+def goldpr(xx):
+    x1 = xx[0]
+    x2 = xx[1]
+
+    fact1a = (x1 + x2 + 1) ** 2
+    fact1b = 19 - 14 * x1 + 3 * x1 ** 2 - 14 * x2 + 6 * x1 * x2 + 3 * x2 ** 2
+    fact1 = 1 + fact1a * fact1b
+
+    fact2a = (2 * x1 - 3 * x2) ** 2
+    fact2b = 18 - 32 * x1 + 12 * x1 ** 2 + 48 * x2 - 36 * x1 * x2 + 27 * x2 ** 2
+    fact2 = 30 + fact2a * fact2b
+
+    y = fact1 * fact2
+
+    return y
+
+def permdb(xx, b=0.5):
+    d = len(xx)
+    outer = 0
+
+    for ii in range(1, d+1):
+        inner = 0
+        for jj in range(1, d+1):
+            xj = xx[jj-1]
+            inner += (jj ** ii + b) * ((xj / jj) ** ii - 1)
+        outer += inner ** 2
+
+    y = outer
+    return y
+
+def powell(xx):
+    x1, x2 = xx
+    term1 = (x1 + 10*x2) ** 2
+    term2 = 5 * (x1 - x2) ** 2
+    term3 = (x1 - 2*x2) ** 4
+    term4 = 10 * (x2 - x1) ** 4
+    y = term1 + term2 + term3 + term4
+    return y
+
+def stybtang(xx):
+    x1, x2 = xx
+    term1 = x1**4 - 16*x1**2 + 5*x1
+    term2 = x2**4 - 16*x2**2 + 5*x2
+    y = (term1 + term2) / 2
+    return y
+
 def evaluate_fitness(position):
     #return ackley(position)
     #return bukin6(position) #Revisar essa funcao
     #return crossit(position)
     #return drop(position)
-    return egg(position)
+    #return egg(position)
+    #return griewank(position)
+    #return holder(position)
     #return langermann(position)
     #return deJong5(position)
     #return schwef(position)
     #return levy(position)
+    #return levy13(position)
+    #return rastrigin(position)
+    #return schaffer2(position)
+    #return schaffer4(position)
+    #return shubert(position)
+    #return easom(position)
+    #return michal(position)
+    #return beale(position)
+    #return branin(position)
+    #return goldpr(position)
+    #return permdb(position)
+    #return powell(position)
+    return stybtang(position)
 
 def employedBees(population, bottom_limit, higher_limit):
     for bee in population:
@@ -199,8 +387,16 @@ factor_random_search = 0.01
 #higher_limit = 5.12
 
 #Limit of Egg
-bottom_limit = -512.0
-higher_limit = 512.0
+#bottom_limit = -512.0
+#higher_limit = 512.0
+
+#Limit of Griewank
+#bottom_limit = -600.0
+#higher_limit = 600.0
+
+#Limit of Holder
+#bottom_limit = -10.0
+#higher_limit = 10.0
 
 #Limit of Langermann
 #bottom_limit = 0
@@ -214,9 +410,53 @@ higher_limit = 512.0
 #bottom_limit = -500
 #higher_limit = 500
 
-#Limit of Levy Function
+#Limit of Levy
 #bottom_limit = -10
 #higher_limit = 10
+
+#Limit of Rastrigin
+#bottom_limit = -5.12
+#higher_limit = 5.12
+
+#Limit of Schaffer
+#bottom_limit = -100.0
+#higher_limit = 100.0
+
+#Limit of Shubert
+#bottom_limit = -10.0
+#higher_limit = 10.0
+
+#Limit of Easom
+#bottom_limit = -100.0
+#higher_limit = 100.0
+
+#Limit of Michalewicz
+#bottom_limit = 0.0
+#higher_limit = math.pi
+
+#Limit of Beale
+#bottom_limit = -4.5
+#higher_limit = 4.5
+
+#Limit of Branin
+#bottom_limit = 0
+#higher_limit = 15.0
+
+#Limit of GoldPr
+#bottom_limit = -2.0
+#higher_limit = 2.0
+
+#Limit of PermDb
+#bottom_limit = -2.0
+#higher_limit = 2.0
+
+#Limit of Powell
+#bottom_limit = -4.0
+#higher_limit = 5.0
+
+#Limit of Styblinski-Tang
+bottom_limit = -5.0
+higher_limit = 5.0
 
 best_solution = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search)
 
