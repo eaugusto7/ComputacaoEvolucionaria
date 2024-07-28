@@ -291,7 +291,7 @@ def stybtang(xx):
 
 def evaluate_fitness(position):
     #return ackley(position)
-    #return bukin6(position) #Revisar essa funcao
+    return bukin6(position) #Revisar essa funcao
     #return crossit(position) #Revisar essa funcao
     #return drop(position)
     #return egg(position)
@@ -313,7 +313,7 @@ def evaluate_fitness(position):
     #return goldpr(position)
     #return permdb(position)
     #return powell(position)
-    return stybtang(position)
+    #return stybtang(position)
 
 def employedBees(population, bottom_limit, higher_limit):
     for bee in population:
@@ -365,8 +365,8 @@ def ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, fact
     return best_solution
 
 problem_size = 2
-colony_size = 150
-generations = 80
+colony_size = 50
+generations = 20
 factor_random_search = 0.01
 
 #Limit of Ackley
@@ -375,8 +375,8 @@ factor_random_search = 0.01
 
 #Revisar essa funcao
 #Limit of Bukin6
-#bottom_limit = -15.0
-#higher_limit = -5.0
+bottom_limit = -15.0
+higher_limit = -5.0
 
 #Limit of Crossfit
 #bottom_limit = -10.0
@@ -455,8 +455,8 @@ factor_random_search = 0.01
 #higher_limit = 5.0
 
 #Limit of Styblinski-Tang
-bottom_limit = -5.0
-higher_limit = 5.0
+#bottom_limit = -5.0
+#higher_limit = 5.0
 
 best_solution = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search)
 
@@ -467,16 +467,23 @@ best_solution = ABC(problem_size, colony_size, generations, bottom_limit, higher
 print(best_solution.fitness)
 
 # Realizar 30 execuções e guardar os resultados
-#results = []
-#for _ in range(30):
-#    result = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search).fitness
-#    results.append(result)
+results = []
+for _ in range(30):
+    result = ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, factor_random_search).fitness
+    results.append(result)
 
 # Calcular estatísticas
-#mean_result = np.mean(results)
-#median_result = np.median(results)
-#max_result = np.max(results)
-#min_result = np.min(results)
+mean_result = np.mean(results)
+median_result = np.median(results)
+max_result = np.max(results)
+min_result = np.min(results)
+std_result = np.std(results)
+
+print(f"Media {mean_result}")
+print(f"Mediana {median_result}")
+print(f"Maximo {max_result}")
+print(f"Minimo {min_result}")
+print(f"Desvio Padrao {std_result}")
 
 # Plotar os resultados
 #plt.figure(figsize=(8, 6))
