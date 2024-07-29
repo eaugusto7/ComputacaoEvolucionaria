@@ -7,6 +7,7 @@ class Bee:
         self.position = position
         self.fitness = evaluate_fitness(position)
 
+# 1 - Ackley - Alexandre Luiz
 def ackley(xx, a=20, b=0.2, c=2*np.pi):
     d = len(xx)
 
@@ -19,7 +20,8 @@ def ackley(xx, a=20, b=0.2, c=2*np.pi):
     y = term1 + term2 + a + np.exp(1)
 
     return y
-    
+
+# 2 - Bukin - Alfredo Beneti
 def bukin6(xx):
     x1, x2 = xx
 
@@ -30,17 +32,19 @@ def bukin6(xx):
 
     return y
 
+# 3 - Cross-in-Tray - Breno Caue
 def crossit(xx):
     x1 = xx[0]
     x2 = xx[1]
 
     fact1 = np.sin(x1) * np.sin(x2)
-    fact2 = np.exp(abs(100 - np.sqrt(x1**2 + x2**2)) / np.pi)
+    fact2 = np.exp(abs(100.0 - (np.sqrt(x1**2 + x2**2) / np.pi)))
 
     y = -0.0001 * (abs(fact1 * fact2) + 1) ** 0.1
 
     return y
 
+# 4 - Drop-Wave - Bruno da Silva
 def drop(xx):
     x1, x2 = xx
     
@@ -51,7 +55,7 @@ def drop(xx):
     
     return y
 
-
+# 5 - Eggholder - Davi Horner
 def egg(xx):
     x1, x2 = xx
     
@@ -62,6 +66,7 @@ def egg(xx):
     
     return y
 
+# 7 - Griewank - Decio Antonio
 def griewank(xx):
     d = len(xx)
     _sum = 0
@@ -76,6 +81,7 @@ def griewank(xx):
     
     return y
 
+# 8 - Holder Table - Dimas Vital
 def holder(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -87,6 +93,7 @@ def holder(xx):
 
     return y
 
+# 9 - Langermann - Eduardo Augusto
 def langermann(xx):
     m = 5
     c = [1, 2, 5, 2, 3]
@@ -101,6 +108,7 @@ def langermann(xx):
         outer += newTerm
     return outer
 
+# 10 - Levy - Gabriel Santos
 def levy(xx):
     d = len(xx)
     
@@ -121,6 +129,7 @@ def levy(xx):
     
     return y
 
+# 11 - Levy N.13 - Giovanna Gouvea
 def levy13(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -133,26 +142,7 @@ def levy13(xx):
 
     return y
 
-def deJong5(xx):
-    a1 = [-32.0, -16.0, 0.0, 16.0, 32.0]*5
-    a2 = [-32.0]*5 + [-16.0]*5 + [0.0]*5 + [16.0]*5 + [32.0]*5
-    a = [a1, a2]
-
-    sum = 0.002
-    for i in range(1, 26):
-        sum += ( 1 / (i + (xx[0] - a[0][i-1])**6 + (xx[1] - a[1][i-1])**6) )
-    
-    return 1.0/sum
-
-def schwef(xx):
-    d = len(xx)
-    _sum = 0
-    for xi in xx:
-        _sum += xi * np.sin(np.sqrt(abs(xi)))
-    
-    y = 418.9829 * d - _sum
-    return y
-
+# 12 - Rastrigin - Guilherme Rodrigues
 def rastrigin(xx):
     d = len(xx)
     _sum = 0
@@ -162,6 +152,7 @@ def rastrigin(xx):
     y = 10 * d + _sum
     return y
 
+# 13 - Schaffer N.2 - Julio Cesar
 def schaffer2(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -173,6 +164,7 @@ def schaffer2(xx):
 
     return y
 
+# 14 - Schaffer N.4 - Lucas de Souza
 def schaffer4(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -184,6 +176,17 @@ def schaffer4(xx):
 
     return y
 
+# 15 - Schwefel - Lucas Resende
+def schwef(xx):
+    d = len(xx)
+    _sum = 0
+    for xi in xx:
+        _sum += xi * np.sin(np.sqrt(abs(xi)))
+    
+    y = 418.9829 * d - _sum
+    return y
+
+# 16 - Schubert - Rafael Ávila
 def shubert(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -200,6 +203,19 @@ def shubert(xx):
 
     return y
 
+# 33 - De Jong N.5 - Ramon Machado
+def deJong5(xx):
+    a1 = [-32.0, -16.0, 0.0, 16.0, 32.0]*5
+    a2 = [-32.0]*5 + [-16.0]*5 + [0.0]*5 + [16.0]*5 + [32.0]*5
+    a = [a1, a2]
+
+    sum = 0.002
+    for i in range(1, 26):
+        sum += ( 1 / (i + (xx[0] - a[0][i-1])**6 + (xx[1] - a[1][i-1])**6) )
+    
+    return 1.0/sum
+
+# 34 - Easom - Rayton Matheus
 def easom(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -208,6 +224,7 @@ def easom(xx):
     y = fact1 * fact2
     return y
 
+# 35 - Michalewicz - Sérgio Henrique
 def michal(xx, m=10):
     d = len(xx)
     _sum = 0
@@ -220,6 +237,7 @@ def michal(xx, m=10):
     y = -_sum
     return y
 
+# 36 - Beale - Severino José
 def beale(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -232,6 +250,7 @@ def beale(xx):
 
     return y
 
+# 37 - Branin - Thuliany Fernandes
 def branin(xx, a=1, b=5.1/(4*np.pi**2), c=5/np.pi, r=6, s=10, t=1/(8*np.pi)):
     x1 = xx[0]
     x2 = xx[1]
@@ -243,6 +262,7 @@ def branin(xx, a=1, b=5.1/(4*np.pi**2), c=5/np.pi, r=6, s=10, t=1/(8*np.pi)):
 
     return y
 
+# 40 - Golstein-Price - Wesley Ribeiro
 def goldpr(xx):
     x1 = xx[0]
     x2 = xx[1]
@@ -291,8 +311,8 @@ def stybtang(xx):
 
 def evaluate_fitness(position):
     #return ackley(position)
-    #return bukin6(position) #Revisar essa funcao
-    #return crossit(position) #Revisar essa funcao
+    #return bukin6(position) 
+    #return crossit(position)
     #return drop(position)
     #return egg(position)
     #return griewank(position)
@@ -365,18 +385,17 @@ def ABC(problem_size, colony_size, generations, bottom_limit, higher_limit, fact
     return best_solution
 
 problem_size = 2
-colony_size = 150
-generations = 80
+colony_size = 25
+generations = 20
 factor_random_search = 0.01
 
 #Limit of Ackley
 #bottom_limit = -32.768
 #higher_limit = 32.768
 
-#Revisar essa funcao
 #Limit of Bukin6
 #bottom_limit = -15.0
-#higher_limit = -5.0
+#higher_limit = 3.0
 
 #Limit of Crossfit
 #bottom_limit = -10.0
@@ -422,7 +441,7 @@ factor_random_search = 0.01
 #bottom_limit = -10.0
 #higher_limit = 10.0
 
-#Limit og DeJong N5
+#Limit of DeJong N5
 #bottom_limit = -65.536
 #higher_limit = 65.536
 
